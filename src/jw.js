@@ -3,6 +3,7 @@ import React, {useEffect, useState} from 'react';
 const Jw = () => {
     const [gasPrices, setGasPrices] = useState({});
     const [requestCount, setRequestCount] = useState(0); // 添加请求总计数状态
+    let [intervalTime, setIntervalTime] = useState(1000); // 初始化定时器时间为 1000 毫秒
 
     const fetchGasPrice = async (url) => {
         try {
@@ -69,10 +70,9 @@ const Jw = () => {
     };
 
     useEffect(() => {
-        // fetchAllGasPrices();
-        const intervalId = setInterval(fetchAllGasPrices, 1200); // 1 second interval
+        const intervalId = setInterval(fetchAllGasPrices, intervalTime); // 1 second interval
         return () => clearInterval(intervalId);
-    },);
+    }, [intervalTime]);
 
     return (
         <div>
@@ -86,6 +86,18 @@ const Jw = () => {
 
             <div>
                 <p>总共请求次数: {requestCount}</p>
+                <p>当前定时: {intervalTime / 1000} s</p>
+                输入定时：
+                <input
+                    type="number"
+                    value={intervalTime / 1000}
+                    onChange={(e) => {
+                        const time = parseInt(e.target.value);
+                        console.log("设置时间", time)
+                        setIntervalTime(isNaN(time) || time < 1 ? 1000 : time*1000);
+                    }}
+                    placeholder="设置定时的时间，单位s"
+                />
             </div>
         </div>
 
