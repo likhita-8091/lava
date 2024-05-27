@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 
-const Jw = ({urls}) => {
+const Jw = () => {
     const [gasPrices, setGasPrices] = useState({});
 
     const fetchGasPrice = async (url) => {
@@ -49,6 +49,8 @@ const Jw = ({urls}) => {
     };
 
     const fetchAllGasPrices = async () => {
+        const urls = JSON.parse(localStorage.getItem('userUrls')) || [];
+
         const newGasPrices = {};
         await Promise.all(
             urls.map(async (url) => {
@@ -66,9 +68,9 @@ const Jw = ({urls}) => {
 
     useEffect(() => {
         fetchAllGasPrices();
-        const intervalId = setInterval(fetchAllGasPrices, 1500); // 1 second interval
+        const intervalId = setInterval(fetchAllGasPrices, 1200); // 1 second interval
         return () => clearInterval(intervalId);
-    }, [urls]);
+    }, );
 
     return (
         <div>
