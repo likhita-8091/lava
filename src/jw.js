@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 
 const Jw = () => {
     const [gasPrices, setGasPrices] = useState({});
+    const [requestCount, setRequestCount] = useState(0); // 添加请求总计数状态
 
     const fetchGasPrice = async (url) => {
         try {
@@ -40,6 +41,7 @@ const Jw = () => {
                 }),
             });
             const result = await response.json();
+            setRequestCount(prevCount => prevCount + 1); // 递增请求总计数
             console.log(`江伟余额：${url}`, result.result.amount)
             return result.result; // Assuming result.result contains the gas price
         } catch (error) {
@@ -58,7 +60,7 @@ const Jw = () => {
                 if (gasPrice !== null) {
                     newGasPrices[url] = gasPrice;
                 }
-
+                setRequestCount(prevCount => prevCount + 1); // 递增请求总计数
                 await fetchJwBalance(url);
 
             })
@@ -67,10 +69,10 @@ const Jw = () => {
     };
 
     useEffect(() => {
-        fetchAllGasPrices();
+        // fetchAllGasPrices();
         const intervalId = setInterval(fetchAllGasPrices, 1200); // 1 second interval
         return () => clearInterval(intervalId);
-    }, );
+    },);
 
     return (
         <div>
@@ -81,7 +83,13 @@ const Jw = () => {
                     </li>
                 ))}
             </ul>
+
+            <div>
+                <p>总共请求次数: {requestCount}</p>
+            </div>
         </div>
+
+
     );
 };
 
