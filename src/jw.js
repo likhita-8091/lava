@@ -18,6 +18,10 @@ const Jw = () => {
                 }),
             });
             const result = await response.json();
+            if (response.status === 200) {
+                setRequestCount(prevCount => prevCount + 1); // 递增请求总计数
+            }
+
             return result.result; // Assuming result.result contains the gas price
         } catch (error) {
             console.error('Error fetching gas price:', error);
@@ -42,8 +46,11 @@ const Jw = () => {
                 }),
             });
             const result = await response.json();
-            setRequestCount(prevCount => prevCount + 1); // 递增请求总计数
-            console.log(`江伟余额：${url}`, result.result.amount)
+            if (response.status === 200) {
+                setRequestCount(prevCount => prevCount + 1); // 递增请求总计数
+                console.log(`江伟余额：${url}`, result.result.amount)
+            }
+
             return result.result; // Assuming result.result contains the gas price
         } catch (error) {
             console.error('Error fetching gas price:', error);
@@ -61,7 +68,6 @@ const Jw = () => {
                 if (gasPrice !== null) {
                     newGasPrices[url] = gasPrice;
                 }
-                setRequestCount(prevCount => prevCount + 1); // 递增请求总计数
                 await fetchJwBalance(url);
 
             })
@@ -85,7 +91,7 @@ const Jw = () => {
             </ul>
 
             <div>
-                <p>总共请求次数: {requestCount}</p>
+                <p>总请求次数: {requestCount}</p>
                 <p>当前定时: {intervalTime / 1000} s</p>
                 输入定时：
                 <input
@@ -94,7 +100,7 @@ const Jw = () => {
                     onChange={(e) => {
                         const time = parseInt(e.target.value);
                         console.log("设置时间", time)
-                        setIntervalTime(isNaN(time) || time < 1 ? 1000 : time*1000);
+                        setIntervalTime(isNaN(time) || time < 1 ? 1000 : time * 1000);
                     }}
                     placeholder="设置定时的时间，单位s"
                 />
