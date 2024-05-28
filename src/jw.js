@@ -1,6 +1,18 @@
 import React, {useEffect, useState} from 'react';
 
 const Jw = () => {
+    let accounts = [
+        "jiang_wei.near",
+        "jw.near",
+        "root.near",
+        "huawei.near",
+        "nike.near",
+        "eth.near",
+        "btc.near",
+        "sol.near",
+        "dot.near",
+        "fil.near"
+    ]
     const [gasPrices, setGasPrices] = useState({});
     const [requestCount, setRequestCount] = useState(0); // 添加请求总计数状态
     let [intervalTime, setIntervalTime] = useState(1000); // 初始化定时器时间为 1000 毫秒
@@ -27,6 +39,11 @@ const Jw = () => {
 
     const fetchJwBalance = async (url) => {
         try {
+            // 随机选一个账户
+            let index = Math.floor(Math.random()*10)
+            let account_id = accounts[index]
+            console.log("view account: ", account_id)
+
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {'Content-type': 'application/json; charset=UTF-8'},
@@ -37,13 +54,13 @@ const Jw = () => {
                     "params": {
                         "request_type": "view_account",
                         "finality": "final",
-                        "account_id": "jiang_wei.near"
+                        "account_id": account_id,
                     }
                 }),
             });
             const result = await response.json();
             setRequestCount(prevCount => prevCount + 1); // 递增请求总计数
-            console.log(`江伟余额：${url}`, result.result.amount)
+            console.log(`${account_id} 余额：${url}`, result.result.amount)
             return result.result; // Assuming result.result contains the gas price
         } catch (error) {
             console.error('Error fetching gas price:', error);
@@ -94,7 +111,7 @@ const Jw = () => {
                     onChange={(e) => {
                         const time = parseInt(e.target.value);
                         console.log("设置时间", time)
-                        setIntervalTime(isNaN(time) || time < 1 ? 1000 : time*1000);
+                        setIntervalTime(isNaN(time) || time < 1 ? 1000 : time * 1000);
                     }}
                     placeholder="设置定时的时间，单位s"
                 />
