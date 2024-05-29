@@ -65,7 +65,6 @@ const Jw = () => {
             const result = await response.json();
             if (response.status === 200) {
                 setRequestCount(prevCount => prevCount + 1); // 递增请求总计数
-                console.log(`${account_id}余额：${url}`, result.result.amount)
             }
 
             return result.result; // Assuming result.result contains the gas price
@@ -98,7 +97,6 @@ const Jw = () => {
             const result = await response.json();
             if (response.status === 200) {
                 setRequestCount(prevCount => prevCount + 1); // 递增请求总计数
-                console.log(`ref响应：`, result)
             }
 
             return result.result; // Assuming result.result contains the gas price
