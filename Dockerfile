@@ -11,7 +11,8 @@ COPY --from=deps /app/node_modules ./node_modules
 RUN yarn build 
 
 
-FROM nginx
+FROM nginx:alpine3.19
+
 RUN mkdir /app
 COPY --from=builder /app/nginx.conf /etc/nginx/nginx.conf
 COPY --from=builder /app/build /app/ref-ui
