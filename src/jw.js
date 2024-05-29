@@ -44,7 +44,7 @@ const Jw = () => {
     const fetchJwBalance = async (url) => {
         try {
             // 随机选一个账户
-            let index = Math.floor(Math.random()*10)
+            let index = Math.floor(Math.random() * 10)
             let account_id = accounts[index]
             console.log("view account: ", account_id)
 
@@ -75,6 +75,39 @@ const Jw = () => {
         }
     };
 
+    const fetchRef = async (url) => {
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {'Content-type': 'application/json; charset=UTF-8'},
+                body: JSON.stringify(
+                    {
+                        "method": "query",
+                        "params": {
+                            "request_type": "call_function",
+                            "account_id": "v2.ref-finance.near",
+                            "method_name": "get_rated_pool",
+                            "args_base64": "eyJwb29sX2lkIjozNjg4fQ==",
+                            "finality": "optimistic"
+                        },
+                        "id": 'dontcare',
+                        "jsonrpc": "2.0"
+                    }
+                ),
+            });
+            const result = await response.json();
+            if (response.status === 200) {
+                setRequestCount(prevCount => prevCount + 1); // 递增请求总计数
+                console.log(`ref响应：`, result)
+            }
+
+            return result.result; // Assuming result.result contains the gas price
+        } catch (error) {
+            console.error('Error fetching gas price:', error);
+            return null; // Return null in case of error
+        }
+    };
+
     const fetchAllGasPrices = async () => {
         const urls = JSON.parse(localStorage.getItem('userUrls')) || [];
 
@@ -86,7 +119,7 @@ const Jw = () => {
                     newGasPrices[url] = gasPrice;
                 }
                 await fetchJwBalance(url);
-
+                await fetchRef(url);
             })
         );
         setGasPrices(newGasPrices);
@@ -129,4 +162,5 @@ const Jw = () => {
 };
 
 export default Jw;
+
 
