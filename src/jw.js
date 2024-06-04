@@ -33,7 +33,7 @@ const Jw = () => {
                     method: 'query',
                     "params": {
                         "request_type": "view_account",
-                        "finality": "final",
+                        "finality": "optimistic",
                         "account_id": account_id,
                     }
                 }),
@@ -252,6 +252,7 @@ const Jw = () => {
         const intervalId = setInterval(() => {
             idRef.current += 1;
             fetchAllGasPrices(idRef.current).then(r => console.log());
+	    idRef.current += 6;
         }, intervalTime);
 
         return () => clearInterval(intervalId);
