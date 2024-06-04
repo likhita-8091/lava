@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 
 const Jw = () => {
     let accounts = [
@@ -16,32 +16,9 @@ const Jw = () => {
     const [gasPrices, setGasPrices] = useState({});
     const [requestCount, setRequestCount] = useState(0); // 添加请求总计数状态
     let [intervalTime, setIntervalTime] = useState(1000); // 初始化定时器时间为 1000 毫秒
+    const idRef = useRef(0);
 
-    const fetchGasPrice = async (url) => {
-        try {
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {'Content-type': 'application/json; charset=UTF-8'},
-                body: JSON.stringify({
-                    jsonrpc: '2.0',
-                    id: 'dontcare',
-                    method: 'gas_price',
-                    params: [null],
-                }),
-            });
-            const result = await response.json();
-            if (response.status === 200) {
-                setRequestCount(prevCount => prevCount + 1); // 递增请求总计数
-            }
-
-            return result.result; // Assuming result.result contains the gas price
-        } catch (error) {
-            console.error('Error fetching gas price:', error);
-            return null; // Return null in case of error
-        }
-    };
-
-    const fetchJwBalance = async (url) => {
+    const fetchJwBalance = async (id, url) => {
         try {
             // 随机选一个账户
             let index = Math.floor(Math.random() * 10)
@@ -53,7 +30,7 @@ const Jw = () => {
                 headers: {'Content-type': 'application/json; charset=UTF-8'},
                 body: JSON.stringify({
                     jsonrpc: '2.0',
-                    id: 'dontcare',
+                    id: id,
                     method: 'query',
                     "params": {
                         "request_type": "view_account",
@@ -65,6 +42,7 @@ const Jw = () => {
             const result = await response.json();
             if (response.status === 200) {
                 setRequestCount(prevCount => prevCount + 1); // 递增请求总计数
+                // console.log(`${account_id}余额：${url}`, result.result.amount)
             }
 
             return result.result; // Assuming result.result contains the gas price
@@ -74,11 +52,14 @@ const Jw = () => {
         }
     };
 
-    const fetchRef = async (url) => {
+    const fetchRef = async (id, url) => {
         try {
+            id = id + 1
             const response = await fetch(url, {
                 method: 'POST',
-                headers: {'Content-type': 'application/json; charset=UTF-8'},
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                },
                 body: JSON.stringify(
                     {
                         "method": "query",
@@ -89,7 +70,43 @@ const Jw = () => {
                             "args_base64": "eyJwb29sX2lkIjozNjg4fQ==",
                             "finality": "optimistic"
                         },
-                        "id": 'dontcare',
+                        "id": id,
+                        "jsonrpc": "2.0"
+                    }
+                ),
+            });
+            const result = await response.json();
+            if (response.status === 200) {
+                setRequestCount(prevCount => prevCount + 1); // 递增请求总计数
+                console.log(`ref响应：`, result)
+            }
+
+            return result.result; // Assuming result.result contains the gas price
+        } catch (error) {
+            console.error('Error fetching gas price:', error);
+            return null; // Return null in case of error
+        }
+    };
+
+    const fetchRef1 = async (id, url) => {
+        try {
+            id = id + 2
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                },
+                body: JSON.stringify(
+                    {
+                        "method": "query",
+                        "params": {
+                            "request_type": "call_function",
+                            "account_id": "dclv2.ref-labs.near",
+                            "method_name": "list_pools",
+                            "args_base64": "e30=",
+                            "finality": "optimistic"
+                        },
+                        "id": id,
                         "jsonrpc": "2.0"
                     }
                 ),
@@ -106,25 +123,137 @@ const Jw = () => {
         }
     };
 
-    const fetchAllGasPrices = async () => {
-        const urls = JSON.parse(localStorage.getItem('userUrls')) || [];
+    const fetchRef2 = async (id, url) => {
+        try {
+            id = id + 3
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                },
+                body: JSON.stringify(
+                    {
+                        "method": "query",
+                        "params": {
+                            "request_type": "call_function",
+                            "account_id": "v2.ref-finance.near",
+                            "method_name": "get_stable_pool",
+                            "args_base64": "eyJwb29sX2lkIjozNDMzfQ==",
+                            "finality": "optimistic"
+                        },
+                        "id": id,
+                        "jsonrpc": "2.0"
+                    }
+                ),
+            });
+            const result = await response.json();
+            if (response.status === 200) {
+                setRequestCount(prevCount => prevCount + 1); // 递增请求总计数
+                console.log(`ref响应：`, result)
+            }
 
-        const newGasPrices = {};
+            return result.result; // Assuming result.result contains the gas price
+        } catch (error) {
+            console.error('Error fetching gas price:', error);
+            return null; // Return null in case of error
+        }
+    };
+
+    const fetchRef3 = async (id, url) => {
+        try {
+            id = id + 4
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                },
+                body: JSON.stringify(
+                    {
+                        "method": "query",
+                        "params": {
+                            "request_type": "call_function",
+                            "account_id": "v2.ref-finance.near",
+                            "method_name": "get_pool",
+                            "args_base64": "eyJwb29sX2lkIjoxOTEwfQ==",
+                            "finality": "optimistic"
+                        },
+                        "id": id,
+                        "jsonrpc": "2.0"
+                    }
+                ),
+            });
+            const result = await response.json();
+            if (response.status === 200) {
+                setRequestCount(prevCount => prevCount + 1); // 递增请求总计数
+                console.log(`ref响应：`, result)
+            }
+
+            return result.result; // Assuming result.result contains the gas price
+        } catch (error) {
+            console.error('Error fetching gas price:', error);
+            return null; // Return null in case of error
+        }
+    };
+
+    const fetchRef4 = async (id, url) => {
+        try {
+            id = id + 5
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                },
+                body: JSON.stringify(
+                    {
+                        "method": "query",
+                        "params": {
+                            "request_type": "call_function",
+                            "account_id": "v2.ref-finance.near",
+                            "method_name": "get_pool",
+                            "args_base64": "eyJwb29sX2lkIjoxOTEwfQ==",
+                            "finality": "optimistic"
+                        },
+                        "id": id,
+                        "jsonrpc": "2.0"
+                    }
+                ),
+            });
+            const result = await response.json();
+            if (response.status === 200) {
+                setRequestCount(prevCount => prevCount + 1); // 递增请求总计数
+                console.log(`ref响应：`, result)
+            }
+
+            return result.result; // Assuming result.result contains the gas price
+        } catch (error) {
+            console.error('Error fetching gas price:', error);
+            return null; // Return null in case of error
+        }
+    };
+
+    const fetchAllGasPrices = async (id) => {
+        const urls = JSON.parse(localStorage.getItem('userUrls')) || [];
+        console.log("id", id)
         await Promise.all(
             urls.map(async (url) => {
-                const gasPrice = await fetchGasPrice(url);
-                if (gasPrice !== null) {
-                    newGasPrices[url] = gasPrice;
-                }
-                await fetchJwBalance(url);
-                await fetchRef(url);
+                await fetchJwBalance(id, url);
+                await fetchRef(id, url);
+                await fetchRef1(id, url);
+                await fetchRef2(id, url);
+                await fetchRef3(id, url);
+                await fetchRef4(id, url);
             })
         );
-        setGasPrices(newGasPrices);
     };
 
     useEffect(() => {
-        const intervalId = setInterval(fetchAllGasPrices, intervalTime); // 1 second interval
+        // const intervalId = setInterval(fetchAllGasPrices, intervalTime); // 1 second interval
+        // 1 1、2、3、4、5、6
+        const intervalId = setInterval(() => {
+            idRef.current += 1;
+            fetchAllGasPrices(idRef.current).then(r => console.log());
+        }, intervalTime);
+
         return () => clearInterval(intervalId);
     }, [intervalTime]);
 
