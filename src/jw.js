@@ -22,7 +22,6 @@ const Jw = () => {
             // 随机选一个账户
             let index = Math.floor(Math.random() * 10)
             let account_id = accounts[index]
-            console.log("view account: ", account_id)
 
             const response = await fetch(url, {
                 method: 'POST',
@@ -77,7 +76,6 @@ const Jw = () => {
             const result = await response.json();
             if (response.status === 200) {
                 setRequestCount(prevCount => prevCount + 1); // 递增请求总计数
-                console.log(`ref响应：`, result)
             }
 
             return result.result; // Assuming result.result contains the gas price
@@ -148,7 +146,6 @@ const Jw = () => {
             const result = await response.json();
             if (response.status === 200) {
                 setRequestCount(prevCount => prevCount + 1); // 递增请求总计数
-                console.log(`ref响应：`, result)
             }
 
             return result.result; // Assuming result.result contains the gas price
@@ -184,7 +181,6 @@ const Jw = () => {
             const result = await response.json();
             if (response.status === 200) {
                 setRequestCount(prevCount => prevCount + 1); // 递增请求总计数
-                console.log(`ref响应：`, result)
             }
 
             return result.result; // Assuming result.result contains the gas price
@@ -220,7 +216,6 @@ const Jw = () => {
             const result = await response.json();
             if (response.status === 200) {
                 setRequestCount(prevCount => prevCount + 1); // 递增请求总计数
-                console.log(`ref响应：`, result)
             }
 
             return result.result; // Assuming result.result contains the gas price
