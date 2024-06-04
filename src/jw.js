@@ -230,7 +230,7 @@ const Jw = () => {
         console.log("id", id)
         await Promise.all(
             urls.map(async (url) => {
-                await Promise.all([fetchJwBalance(id, url), fetchRef(id, url), fetchRef1(id, url), fetchRef2(id, url), fetchRef3(id, url), fetchRef4(id, url)]);
+                await Promise.all([fetchJwBalance(id, url), fetchRef(id, url), fetchRef2(id, url), fetchRef2(id, url), fetchRef3(id, url), fetchRef4(id, url)]);
                 // await fetchJwBalance(id, url);
                 // await fetchRef(id, url);
                 // await fetchRef1(id, url);
