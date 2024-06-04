@@ -39,7 +39,7 @@ const Urls = () => {
       <ul>
         {urls.map((url, index) => (
           <li key={index}>
-            {url}
+            {index}:   &nbsp;  &nbsp;    &nbsp;      {url}
             <button onClick={() => handleDelete(index)}> 删除这一条url </button>
           </li>
         ))}
@@ -49,4 +49,5 @@ const Urls = () => {
 };
 
 export default Urls;
+
 

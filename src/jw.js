@@ -13,7 +13,6 @@ const Jw = () => {
         "dot.near",
         "fil.near"
     ]
-    const [gasPrices, setGasPrices] = useState({});
     const [requestCount, setRequestCount] = useState(0); // 添加请求总计数状态
     let [intervalTime, setIntervalTime] = useState(1000); // 初始化定时器时间为 1000 毫秒
     const idRef = useRef(0);
@@ -236,12 +235,13 @@ const Jw = () => {
         console.log("id", id)
         await Promise.all(
             urls.map(async (url) => {
-                await fetchJwBalance(id, url);
-                await fetchRef(id, url);
-                await fetchRef1(id, url);
-                await fetchRef2(id, url);
-                await fetchRef3(id, url);
-                await fetchRef4(id, url);
+                await Promise.all([fetchJwBalance(id, url), fetchRef(id, url), fetchRef1(id, url), fetchRef2(id, url), fetchRef3(id, url), fetchRef4(id, url)]);
+                // await fetchJwBalance(id, url);
+                // await fetchRef(id, url);
+                // await fetchRef1(id, url);
+                // await fetchRef2(id, url);
+                // await fetchRef3(id, url);
+                // await fetchRef4(id, url);
             })
         );
     };
@@ -259,14 +259,6 @@ const Jw = () => {
 
     return (
         <div>
-            <ul>
-                {Object.entries(gasPrices).map(([url, gasPrice]) => (
-                    <li key={url}>
-                        {url}: {typeof gasPrice === 'object' ? JSON.stringify(gasPrice) : gasPrice}
-                    </li>
-                ))}
-            </ul>
-
             <div>
                 <p>总请求次数: {requestCount}</p>
                 <p>当前定时: {intervalTime / 1000} s</p>
