@@ -2,18 +2,19 @@ import React, { useState, useEffect } from 'react';
 
 const Urls = () => {
   const [urls, setUrls] = useState([]);
-  const [inputUrl, setInputUrl] = useState('');
+  const [inputUrls, setInputUrls] = useState('');
 
   const handleChange = (e) => {
-    setInputUrl(e.target.value);
+    setInputUrls(e.target.value);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const updatedUrls = [...urls, inputUrl];
+    const newUrls = inputUrls.split('\n').filter(url => url.trim() !== '');
+    const updatedUrls = [...urls, ...newUrls];
     setUrls(updatedUrls);
     localStorage.setItem('userUrls', JSON.stringify(updatedUrls));
-    setInputUrl('');
+    setInputUrls('');
   };
 
   const handleDelete = (index) => {
@@ -21,6 +22,11 @@ const Urls = () => {
     updatedUrls.splice(index, 1);
     setUrls(updatedUrls);
     localStorage.setItem('userUrls', JSON.stringify(updatedUrls));
+  };
+
+  const handleDeleteAll = () => {
+    setUrls([]);
+    localStorage.removeItem('userUrls');
   };
 
   useEffect(() => {
@@ -31,16 +37,25 @@ const Urls = () => {
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <input type="text" value={inputUrl} onChange={handleChange} />
-        <button type="submit">Add URL</button>
+        <textarea
+          value={inputUrls}
+          onChange={handleChange}
+          rows="20"
+          cols="40"
+          placeholder="每行一个URL"
+        />
+        <div style={{ marginTop: '10px' }}>
+          <button type="submit" style={{ marginRight: '10px' }}>Add URLs</button>
+          <button type="button" onClick={handleDeleteAll}>一键删除所有URL</button>
+        </div>
       </form>
 
       <h2>URLs:</h2>
       <ul>
         {urls.map((url, index) => (
           <li key={index}>
-            {index}:   &nbsp;  &nbsp;    &nbsp;      {url}
-            <button onClick={() => handleDelete(index)}> 删除这一条url </button>
+            {index}: &nbsp; &nbsp; &nbsp; {url}
+            <button onClick={() => handleDelete(index)}>删除这一条url</button>
           </li>
         ))}
       </ul>
@@ -49,5 +64,4 @@ const Urls = () => {
 };
 
 export default Urls;
-
 
