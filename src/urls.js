@@ -40,8 +40,8 @@ const Urls = () => {
         <textarea
           value={inputUrls}
           onChange={handleChange}
-          rows="60"
-          cols="100"
+	              style={{width: '600px', height: '462px'}}
+
           placeholder="每行一个URL"
         />
         <div style={{ marginTop: '10px' }}>
